@@ -22,33 +22,11 @@ const LoginPage = () => {
 
   return (
     <>
-      <FloatingShape
-        color="bg-green-500"
-        size="w-64 h-64"
-        top="-5%"
-        left="10%"
-        delay={0}
-      />
-      <FloatingShape
-        color="bg-emerald-500"
-        size="w-48 h-48"
-        top="70%"
-        left="80%"
-        delay={5}
-      />
-      <FloatingShape
-        color="bg-lime-500"
-        size="w-32 h-32"
-        top="40%"
-        left="-10%"
-        delay={2}
-      />
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden"
+        className="max-w-md w-full mt-28 bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden "
       >
         <div className="p-8">
           <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">

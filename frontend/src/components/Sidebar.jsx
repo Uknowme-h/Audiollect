@@ -11,7 +11,7 @@ const Sidebar = () => {
   return (
     <>
       <button
-        className="md:hidden p-4 text-white bg-gray-800 fixed top-0 left-0 z-20"
+        className="md:hidden p-4 text-white bg-gray-800 fixed top-0 right-0 z-20"
         onClick={toggleSidebar}
       >
         ☰
