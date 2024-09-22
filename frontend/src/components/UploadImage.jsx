@@ -1,9 +1,11 @@
 import { cn } from "../lib/utils";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { IconUpload } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
-import { AudioPlayer } from "react-audio-play";
+import { SelectedContext } from "../pages/OcrPage";
+import analyzeImageWithTesseract from "../utils/vision";
+import { useContext } from "react";
 
 const mainVariant = {
   initial: {
@@ -28,7 +30,31 @@ const secondaryVariant = {
 
 export const FileUpload = ({ onChange }) => {
   const [files, setFiles] = useState([]);
+  const [data, setData] = useState(null);
   const fileInputRef = useRef(null);
+  const [, setSelectedCam, , setText] = useContext(SelectedContext);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (files.length > 0) {
+      const analyzeImage = async () => {
+        try {
+          setLoading(true);
+          const result = await analyzeImageWithTesseract(
+            URL.createObjectURL(files[0])
+          );
+          setText(result);
+          console.log(result);
+          setLoading(false);
+          setSelectedCam("text");
+        } catch (error) {
+          console.error("Error analyzing image:", error);
+        }
+      };
+
+      analyzeImage();
+    }
+  }, [files]);
 
   const handleFileChange = (newFiles) => {
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
@@ -47,7 +73,7 @@ export const FileUpload = ({ onChange }) => {
       console.log(error);
     },
   });
-
+  console.log(files);
   return (
     <div className="w-full" {...getRootProps()}>
       <motion.div
@@ -160,6 +186,14 @@ export const FileUpload = ({ onChange }) => {
             )}
           </div>
         </div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="text-center text-neutral-400 dark:text-neutral-400 text-sm mt-4"
+      >
+        {loading ? "Analyzing image..." : "Analyze image with OCR"}
       </motion.div>
     </div>
   );

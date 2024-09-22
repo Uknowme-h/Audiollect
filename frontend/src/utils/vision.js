@@ -1,29 +1,42 @@
-import { ImageAnnotatorClient } from '@google-cloud/vision';
-import path from 'path';
-import fs from 'fs';
+import { createWorker } from 'tesseract.js';
 
-async function analyzeImage(Image) {
-    try {
-        const keyFilePath = path.resolve('./client_secret_100655805930-o5g2t9v3o7bbqes6mj8rjndtu1fsf2ib.apps.googleusercontent.com.json');
+// import { ImageAnnotatorClient } from '@google-cloud/vision';
+// import path from 'path';
+// import fs from 'fs';
 
-        // Check if the credentials file exists
-        if (!fs.existsSync(keyFilePath)) {
-            throw new Error(`Credentials file not found at path: ${keyFilePath}`);
-        }
+// async function analyzeImage(Image) {
+//     try {
+//         const keyFilePath = path.resolve('./config.json');
 
-        const client = new ImageAnnotatorClient({
-            keyFilename: keyFilePath
-        });
+//         // Check if the credentials file exists
+//         if (!fs.existsSync(keyFilePath)) {
+//             throw new Error(`Credentials file not found at path: ${keyFilePath}`);
+//         }
 
-        const [result] = await client.textDetection(Image);
-        return result.textAnnotations;
-    } catch (error) {
-        console.error("Error analyzing image: ", error);
-    }
+//         const client = new ImageAnnotatorClient({
+//             keyFilename: keyFilePath
+//         });
+
+//         const [result] = await client.textDetection(Image);
+//         return result.textAnnotations;
+//     } catch (error) {
+//         console.error("Error analyzing image: ", error);
+//     }
+// }
+
+// (async () => {
+//     const Image = './handwritten.jpg';
+//     const result = await analyzeImage(Image);
+//     console.log(result);
+// })();
+
+async function analyzeImageWithTesseract(imageUrl) {
+    const worker = await createWorker();
+    const { data: { text } } = await worker.recognize(imageUrl);
+    await worker.terminate();
+    return text;
 }
 
-(async () => {
-    const Image = './handwritten.jpg';
-    const result = await analyzeImage(Image);
-    console.log(result);
-})();
+export default analyzeImageWithTesseract;
+
+

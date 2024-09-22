@@ -1,18 +1,19 @@
 // Layout.jsx
 import React, { useContext, useState } from "react";
 import Sidebar from "../components/Sidebar";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import Dock from "./dock";
 import { AuthContext } from "../App";
-
-import axios from "axios";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { useAuthStore } from "../store/authStore";
 
-import config from "../../config.json"; // Adjust the path as needed
+import config from "../../config.json";
 
 const API_KEY = config.VITE_GOOGLE_API_KEY;
 
 const Layout = () => {
+  const { logout } = useAuthStore();
+
   const genAI = new GoogleGenerativeAI(API_KEY);
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
@@ -41,11 +42,27 @@ const Layout = () => {
       <div className="block md:hidden">
         <Sidebar key="sidebar" className="w-full" />
       </div>
-      <div className="w-full flex flex-col min-h-screen relative">
-        <div className="w-full relative bg-gray-800 text-white p-4">
-          <h1 className="text-xl">Navbar</h1>
+      <div className="w-full flex flex-col min-h-screen absolute top-0">
+        <div className="w-full absolute top-0 left-0 bg-[#031323] bg-opacity-50 text-white p-4 flex items-center justify-between backdrop-filter backdrop-blur-lg shadow-lg border border-gray-700 z-10">
+          <h1 className="text-xl text-[#433D8B] ml-4">AudioLect</h1>
+          <div className="flex items-center">
+            <Link to={"/about"}>
+              <h1 className="text-xl text-[#433D8B] mr-4">About Us</h1>
+            </Link>
+            <button
+              onClick={() => {
+                logout();
+              }}
+              className="text-xl text-red-500"
+            >
+              LogOut
+            </button>
+          </div>
         </div>
-        <Outlet />
+        <div className="flex-1 pt-16">
+          {/* Add padding to avoid content being hidden behind the navbar */}
+          <Outlet />
+        </div>
       </div>
       <div className="hidden md:block fixed bottom-0 left-1/2 transform -translate-x-1/2 p-4">
         <Dock toggleChat={() => setischatvisible((prev) => !prev)} />
@@ -62,12 +79,17 @@ const Layout = () => {
             </button>
           </div>
           <div className="flex-1 overflow-y-auto p-2 border rounded-lg bg-gray-100 mb-2">
-            <pre className="whitespace-pre-wrap">{answer}</pre>
+            <pre className="whitespace-pre-wrap">
+              {answer
+                ? answer
+                : "Hey im your chatBot Sparky. How can I help you Today ?"}
+            </pre>
           </div>
           <div className="flex items-center mt-auto">
             <input
               type="text"
               className="flex-1 border-2 border-gray-200 rounded-lg mr-2 p-2 py-2"
+              placeholder="Ask a question"
               onChange={(e) =>
                 setQuestion(
                   e.target.value + "please answer in 100 words or less"

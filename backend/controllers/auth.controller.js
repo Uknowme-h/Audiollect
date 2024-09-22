@@ -4,6 +4,9 @@ import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js
 import { sendPasswordResetEmail, sendPasswordResetSuccessEmail, sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/emails.js";
 import crypto from 'crypto';
 import dotenv from 'dotenv';
+import { v4 as uuidv4 } from 'uuid';
+import { Store } from '../models/Store.js';
+import { uploadFiles } from "../helpers/upload.js";
 
 dotenv.config();
 
@@ -176,4 +179,60 @@ export const checkAuth = async (req, res) => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 
+}
+
+export const addbook = async (req, res) => {
+    const { user_id, url } = req.body;
+    try {
+        const user = await User.findById(user_id).select("-password");
+        if (!user) {
+            return res.status(404).send({ error: 'User not found' });
+        }
+        const newEntry = {
+            id: uuidv4(),
+            url: url
+        };
+        user.library.push(newEntry);
+        await user.save();
+        res.status(200).send(user);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
+
+
+export const uploadFile = async (req, res) => {
+    const { user_id } = req.body;
+
+    try {
+        const upload = await uploadFiles(req.file.path);
+
+        let store = await Store.findOne({ user_id });
+
+        if (!store) {
+            store = new Store({
+                user_id,
+                file_urls: [upload.secure_url]
+            });
+        } else {
+            store.file_urls.push(upload.secure_url);
+        }
+
+        const record = await store.save();
+        res.send({ success: true, msg: 'File Uploaded Successfully!', data: record });
+
+    } catch (error) {
+        res.send({ success: false, msg: error.message });
+    }
+};
+
+export const getAllStore = async (req, res) => {
+
+    try {
+        const store = await Store.find();
+
+        res.send(store);
+    } catch (error) {
+        res.send(error);
+    }
 }

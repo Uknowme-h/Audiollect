@@ -17,6 +17,8 @@ import { Profile } from "./pages/Profile";
 import Layout from "./components/Layout";
 import { BackgroundGradientAnimation } from "./components/Background-gradient-animation";
 import OcrPage from "./pages/OcrPage";
+import AboutUs from "./pages/AboutUs";
+import Library from "./pages/Library";
 
 export const AuthContext = createContext();
 
@@ -58,13 +60,15 @@ function App() {
 
   return (
     <AuthContext.Provider value={{ ischatvisible, setischatvisible }}>
-      <div className="min-h-screen bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 flex items-center justify-center relative overflow-hidden">
+      <div className="min-h-screen bg-[#17153B] flex items-center justify-center relative overflow-hidden">
         <Routes>
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/" element={<DashboardPage />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/ocr" element={<OcrPage />} />
+              <Route path="/about" element={<AboutUs />} />
+              <Route path="/library" element={<Library />} />
             </Route>
           </Route>
 

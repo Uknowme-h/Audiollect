@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+import { audio } from "@cloudinary/url-gen/qualifiers/source";
 
 const API_URL = import.meta.env.MODE === "development" ? "http://localhost:5000/api/auth" : "/api/auth";
 
@@ -13,6 +14,7 @@ export const useAuthStore = create((set) => ({
     isLoading: false,
     isCheckingAuth: true,
     message: null,
+    audioSrc: null,
 
     signup: async (email, password, name) => {
         set({ isLoading: true, error: null });
@@ -20,7 +22,6 @@ export const useAuthStore = create((set) => ({
             const response = await axios.post(`${API_URL}/signup`, { email, password, name });
             set({ user: response.data.user, isAuthenticated: true, isLoading: false });
         } catch (error) {
-
             set({ error: error.response.data.msg || "Error signing up", isLoading: false });
             throw error;
         }
@@ -66,7 +67,6 @@ export const useAuthStore = create((set) => ({
         set({ isCheckingAuth: true, error: null });
         try {
             const response = await axios.get(`${API_URL}/check-auth`);
-
             set({ user: response.data.user, isAuthenticated: true, isCheckingAuth: false });
         } catch (error) {
             set({ error: null, isCheckingAuth: false, isAuthenticated: false });
@@ -98,4 +98,46 @@ export const useAuthStore = create((set) => ({
             throw error;
         }
     },
+    addBook: async (user_id, url) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.post(`${API_URL}/library`, { user_id, url });
+            set({ user: response.data, isLoading: false });
+        } catch (error) {
+            set({ error: error.response.data.msg || "Error adding book to library", isLoading: false });
+            throw error;
+        }
+    },
+
+    uploadFile: async (user_id, file) => {
+        set({ isLoading: true, error: null });
+        const formData = new FormData();
+        formData.append('user_id', user_id);
+        formData.append('file', file);
+
+        try {
+            const response = await axios.post(`http://localhost:5000/api/upload/upload-file`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            set({ audioSrc: response.data, isLoading: false });
+            return response.data;
+        } catch (error) {
+            set({ error: error.response.data.msg || "Error uploading file", isLoading: false });
+            throw error;
+        }
+    },
+    getFiles: async () => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.get(`http://localhost:5000/api/upload/get-file`);
+            set({ audioSrc: response, isLoading: false });
+            return response;
+        } catch (error) {
+            set({ error: error.response.data.msg || "Error getting files", isLoading: false });
+            throw error;
+        }
+    }
+
 }));
