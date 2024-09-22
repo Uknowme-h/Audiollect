@@ -11,5 +11,5 @@ export const mailtrapClient = new MailtrapClient({
 
 export const sender = {
     email: "mailtrap@demomailtrap.com",
-    name: "Be My Eyes",
+    name: "Audiollect",
 };
