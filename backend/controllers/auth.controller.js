@@ -227,9 +227,10 @@ export const uploadFile = async (req, res) => {
 };
 
 export const getAllStore = async (req, res) => {
+    const { user_id } = req.query;
 
     try {
-        const store = await Store.find();
+        const store = await Store.find({ user_id });
 
         res.send(store);
     } catch (error) {

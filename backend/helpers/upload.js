@@ -11,7 +11,7 @@ export const uploadFiles = async (file) => {
         const upload = await cloudinary.uploader.upload(file, {
             resource_type: 'video'
         });
-        console.log(upload);
+
         return upload;
     } catch (error) {
         throw new Error(error.message);

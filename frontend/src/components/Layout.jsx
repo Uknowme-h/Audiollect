@@ -4,35 +4,27 @@ import Sidebar from "../components/Sidebar";
 import { Link, Outlet } from "react-router-dom";
 import Dock from "./dock";
 import { AuthContext } from "../App";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useAuthStore } from "../store/authStore";
-
-import config from "../../config.json";
-
-const API_KEY = config.VITE_GOOGLE_API_KEY;
+import chatBot from "../utils/chatbot";
 
 const Layout = () => {
   const { logout } = useAuthStore();
 
-  const genAI = new GoogleGenerativeAI(API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
   const { ischatvisible, setischatvisible } = useContext(AuthContext);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const aiRun = async () => {
     try {
-      const result = await model.generateContent(question);
-      const text = await result.response.text();
-
-      // Remove unwanted characters like asterisks (*) and hashtags (#)
-      const processedResponse = text
-        .replace(/[*#]/g, "")
-        .replace(/<[^>]*>/g, "");
+      setLoading(true);
+      const processedResponse = await chatBot(question);
 
       setAnswer(processedResponse);
+      setLoading(false);
     } catch (error) {
+      setAnswer("Sorry I am not able to answer that question");
+      setLoading(false);
       console.error("Error generating content:", error);
     }
   };

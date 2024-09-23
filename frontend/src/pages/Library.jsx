@@ -1,31 +1,50 @@
 import { useEffect, useState } from "react";
 import { AudioPlayer } from "react-audio-play";
+import { useAuthStore } from "../store/authStore";
 
 const Library = () => {
-  const [files, setFiles] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { user, getFiles } = useAuthStore();
 
   useEffect(() => {
-    const fetchFiles = async () => {
+    const getfiles = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5000/api/upload/get-file"
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
+        const response = await getFiles(user?._id);
+        const data = response.data;
+
         setFiles(data);
       } catch (error) {
-        setError(error.message);
+        console.error(error);
       } finally {
         setIsLoading(false);
       }
     };
-
-    fetchFiles();
+    getfiles();
   }, []);
+
+  const [files, setFiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // useEffect(() => {
+  //   const fetchFiles = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         "http://localhost:5000/api/upload/get-file"
+  //       );
+  //       if (!response.ok) {
+  //         throw new Error("Network response was not ok");
+  //       }
+  //       const data = await response.json();
+  //       setFiles(data);
+  //     } catch (error) {
+  //       setError(error.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchFiles();
+  // }, []);
 
   console.log(files);
   return (

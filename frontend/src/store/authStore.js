@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import axios from "axios";
-import { audio } from "@cloudinary/url-gen/qualifiers/source";
+
 
 const API_URL = import.meta.env.MODE === "development" ? "http://localhost:5000/api/auth" : "/api/auth";
+const CLOUD_URL = import.meta.env.MODE === "development" ? "http://localhost:5000/api/upload" : "/api/upload";
 
 
 axios.defaults.withCredentials = true;
@@ -116,7 +117,7 @@ export const useAuthStore = create((set) => ({
         formData.append('file', file);
 
         try {
-            const response = await axios.post(`http://localhost:5000/api/upload/upload-file`, formData, {
+            const response = await axios.post(`${CLOUD_URL}/upload-file`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -128,10 +129,11 @@ export const useAuthStore = create((set) => ({
             throw error;
         }
     },
-    getFiles: async () => {
+    getFiles: async (user_id) => {
         set({ isLoading: true, error: null });
+        console.log("user_id", user_id);
         try {
-            const response = await axios.get(`http://localhost:5000/api/upload/get-file`);
+            const response = await axios.get(`${CLOUD_URL}/get-file`, { params: { user_id } });
             set({ audioSrc: response, isLoading: false });
             return response;
         } catch (error) {

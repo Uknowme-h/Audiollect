@@ -4,10 +4,8 @@ import fetchAudioStream from "../utils/speech";
 import { useEffect, useState, useContext } from "react";
 import { useAuthStore } from "../store/authStore";
 import { SelectedContext } from "../pages/OcrPage";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import config from "../../config.json";
 
-const API_KEY = config.VITE_GOOGLE_API_KEY;
+import chatBot from "../utils/chatbot";
 
 const NotesPage = () => {
   const [inputText, setInputText] = useState("");
@@ -17,22 +15,14 @@ const NotesPage = () => {
   const [loadingSummary, setLoadingSummary] = useState(false);
   const [error, setError] = useState(null);
   const [, , text, setText] = useContext(SelectedContext);
-  const genAI = new GoogleGenerativeAI(API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
 
   const aiRun = async (question) => {
     try {
       setLoadingSummary(true);
-      const result = await model.generateContent(question);
-      const text = await result.response.text();
-
-      // Remove unwanted characters like asterisks (*) and hashtags (#)
-      const processedResponse = text
-        .replace(/[*#]/g, "")
-        .replace(/<[^>]*>/g, "");
-
+      const processedResponse = await chatBot(question);
       setAnswer(processedResponse);
       setInputText(processedResponse); // Set the summarized text to the inputText state
       setLoadingSummary(false);
