@@ -1,6 +1,4 @@
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
-import FloatingShape from "./components/FloatingShape";
-
 import SignUpPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
