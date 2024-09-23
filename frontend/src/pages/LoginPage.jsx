@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import Input from "../components/Input";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
-import FloatingShape from "../components/FloatingShape";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");

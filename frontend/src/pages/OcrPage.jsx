@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import { Camera, Text, Upload } from "lucide-react";
-import ScanImage from "../components/ScanImage";
-import { createContext, useContext, useState } from "react";
+import { Text, Upload } from "lucide-react";
+
+import { createContext, useState } from "react";
 import { FileUpload } from "../components/UploadImage";
 import NotesPage from "../components/NotesPage";
 

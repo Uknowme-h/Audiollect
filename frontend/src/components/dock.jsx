@@ -1,10 +1,4 @@
-import {
-  MotionValue,
-  motion,
-  useMotionValue,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Home, Library, MessageCircle, Plus, User } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Tooltip as ReactTooltip } from "react-tooltip";

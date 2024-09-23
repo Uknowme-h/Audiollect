@@ -13,11 +13,11 @@ const NotesPage = () => {
   const [loading, setLoading] = useState(false);
   const [loadingAudio, setLoadingAudio] = useState(false);
   const [loadingSummary, setLoadingSummary] = useState(false);
-  const [error, setError] = useState(null);
-  const [, , text, setText] = useContext(SelectedContext);
+  const [, setError] = useState(null);
+  const [, , text] = useContext(SelectedContext);
 
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [, setQuestion] = useState("");
+  const [, setAnswer] = useState("");
 
   const aiRun = async (question) => {
     try {

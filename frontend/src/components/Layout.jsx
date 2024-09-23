@@ -13,7 +13,7 @@ const Layout = () => {
   const { ischatvisible, setischatvisible } = useContext(AuthContext);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [setLoading] = useState(false);
 
   const aiRun = async () => {
     try {

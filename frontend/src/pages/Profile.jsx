@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useAuthStore } from "../store/authStore";
 import { formatDate } from "../utils/date";
-import Sidebar from "../components/Sidebar";
 
 export const Profile = () => {
   const { user } = useAuthStore();
