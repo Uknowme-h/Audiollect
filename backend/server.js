@@ -12,7 +12,7 @@ const app = express();
 const __dirname = path.resolve();
 dotenv.config();
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: "https://audiollect.vercel.app", credentials: true }));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -24,6 +24,9 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'));
     });
 }
+app.use("/",(req,res)=>{
+    res.json("Api started");
+});
 app.listen(PORT, () => {
     connectDB();
     console.log('Server is running on http://localhost:' + PORT);
