@@ -1,9 +1,11 @@
+
+const SPEECH_API_KEY = import.meta.env.VITE_SPEECH_API_KEY;
 const fetchAudioStream = async (inputText) => {
     try {
         const response = await fetch(`https://api.sws.speechify.com/v1/audio/stream`, {
             method: "POST",
             headers: {
-                Authorization: `Bearer QFdHN96XTO-koVDMfF7mRHxnpLrfHupfLXIGOZQAL14=`,
+                Authorization: `Bearer ${SPEECH_API_KEY}`,
                 "Content-Type": "application/json",
                 Accept: "audio/mpeg",
             },
