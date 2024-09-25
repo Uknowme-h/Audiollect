@@ -1,6 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 // import config from "../../config.json";
 const API_KEY = process.env.VITE_GOOGLE_API_KEY;
+
+if (!API_KEY) {
+    throw new Error("API key is not defined. Please set the VITE_GOOGLE_API_KEY environment variable.");
+}
 const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
